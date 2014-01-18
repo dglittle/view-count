@@ -38,9 +38,13 @@ function drawViews(views) {
 }
 
 $(function () {
-	$('body').append(createThrobber())
+	$('body').append($('<a href="https://github.com/dglittle/view-count"><img width="64px" style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>'));
+
+	var d = $('<div/>')
+	$('body').append(d)
+	d.append(createThrobber())
 	rpc('getViews', function (views) {
-		$('body').empty().append(drawViews(views))
+		d.empty().append(drawViews(views))
 	})
 })
 
