@@ -1,0 +1,49 @@
+<html>
+<head>
+<title>untitled</title>
+<meta name="viewport" content="width=device-width, user-scalable=no">
+<style>
+
+body {
+    margin: 0px;
+}
+table {
+    border-collapse: collapse;
+}
+th, td {
+    padding: 0px;
+}
+
+</style>
+</head>
+<body>
+<script src="//code.jquery.com/jquery-2.0.3.min.js"></script>
+<script src="/gl519/jquery.cookie.js"></script>
+
+<script src="/gl519/index.js"></script>
+
+<script src="/static/utils.js"></script>
+<script>
+
+function drawViews(views) {
+	var d = $('<div/>')
+	_.each(views, function (v) {
+		var dd = $('<div/>')
+		dd.append($('<div style="width:50px;float:left"/>').text(v.count))
+		dd.append($('<div style="float:left"/>').text(v._id))
+		dd.append($('<div style="clear:both"/>'))
+		d.append(dd)
+	})
+	return d
+}
+
+$(function () {
+	$('body').append(createThrobber())
+	rpc('getViews', function (views) {
+		$('body').empty().append(drawViews(views))
+	})
+})
+
+</script>
+</body>
+</html>
