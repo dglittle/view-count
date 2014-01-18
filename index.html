@@ -46,6 +46,12 @@ $(function () {
 	rpc('getViews', function (views) {
 		d.empty().append(drawViews(views))
 	})
+
+	$.ajax({
+	    url : location.href + 'view/' + encodeURIComponent(location.href),
+	    xhrFields : { withCredentials: true },
+	    success : function (count) { }
+	})
 })
 
 </script>

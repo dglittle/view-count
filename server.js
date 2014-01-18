@@ -21,9 +21,6 @@ _.run(function () {
             _.run(function () {
                 try {
                     var key = req.params[0]
-
-                    console.log('cookies: ', req.cookies)
-
                     if (!req.cookies.viewed) {
                         res.cookie('viewed', 'true', { path : req.path , maxAge : 1000 * 60 * 60 * 24 * 365 })
                         var count = _.p(db.collection('views').findAndModify({
