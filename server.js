@@ -17,6 +17,51 @@ _.run(function () {
     }
 
     createServer(db, process.env.PORT, process.env.SESSION_SECRET, rpc_version, rpc, function (app) {
+
+        function send(req, res, body) {
+            var mime = 'text/plain'
+            if (typeof body != 'string') {
+                body = _.json(body)
+                mime = 'application/json'
+            }
+            var headers = {
+                'Content-Type': mime + '; charset=utf-8',
+                'Content-Length': Buffer.byteLength(body)
+            }
+            if (req.headers.origin) {
+                headers['Access-Control-Allow-Origin'] = req.headers.origin
+                headers['Access-Control-Allow-Credentials'] = 'true'
+            }
+            res.writeHead(200, headers)
+            res.end(body)
+        }
+
+        app.all(/\/set\/([^\/]+)/, function (req, res, next) {
+            _.run(function () {
+                try {
+                    var key = req.params[0]
+                    var value = req.method.match(/post/i) ? req.body : _.unescapeUrl(req.url.match(/\?(.*)/)[1])
+                    _.p(db.collection('keyvalues').update({ _id : key }, { $set : { value : value } }, { upsert : true }, _.p()))
+                    send(req, res, true)
+                } catch (e) {
+                    next(e)
+                }
+            })
+        })
+
+        app.all(/\/get\/([^\/]+)/, function (req, res, next) {
+            _.run(function () {
+                try {
+                    var key = req.params[0]
+                    var value = _.p(db.collection('keyvalues').findOne({ _id : key }, _.p()))
+                    if (!value) throw 'key not found'
+                    send(req, res, value.value)
+                } catch (e) {
+                    next(e)
+                }
+            })
+        })
+
         app.all(/\/view\/([^\/]+)/, function (req, res, next) {
             _.run(function () {
                 try {
@@ -32,18 +77,7 @@ _.run(function () {
                     } else {
                         var count = _.p(db.collection('views').findOne({ _id : key }, _.p())).count
                     }
-                    var body = _.json(count)
-
-                    var headers = {
-                        'Content-Type': 'application/json; charset=utf-8',
-                        'Content-Length': Buffer.byteLength(body)
-                    }
-                    if (req.headers.origin) {
-                        headers['Access-Control-Allow-Origin'] = req.headers.origin
-                        headers['Access-Control-Allow-Credentials'] = 'true'
-                    }
-                    res.writeHead(200, headers)
-                    res.end(body)
+                    send(req, res, count)
                 } catch (e) {
                     next(e)
                 }
