@@ -54,8 +54,7 @@ _.run(function () {
                 try {
                     var key = req.params[0]
                     var value = _.p(db.collection('keyvalues').findOne({ _id : key }, _.p()))
-                    if (!value) throw 'key not found'
-                    send(req, res, value.value)
+                    send(req, res, value ? value.value : '')
                 } catch (e) {
                     next(e)
                 }
