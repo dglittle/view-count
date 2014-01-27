@@ -29,14 +29,7 @@ to view the counts for tracked urls, just visit http://view-count.herokuapp.com
 note that it supports CORS and uses cookies to track uniqueness.
 
 here's how to set a value:
-
-```
-GET http://view-count.herokuapp.com/set/MY-KEY?MY-VALUE
-or POST MY-VALUE to http://view-count.herokuapp.com/set/MY-KEY
-```
+http://view-count.herokuapp.com/set/MY-KEY?MY-VALUE (or POST with MY-VALUE in the post body)
 
 here's how to get a value:
-
-```
-GET http://view-count.herokuapp.com/set/MY-KEY
-```
+http://view-count.herokuapp.com/get/MY-KEY
